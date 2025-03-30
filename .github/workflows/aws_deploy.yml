@@ -1,0 +1,30 @@
+name: Python CDK Synthesis on Pull Request
+
+on:
+  pull_request:
+    branches:
+      - master  # Specify the branch to trigger the workflow
+
+jobs:
+  synthesize:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: '3.9'  # Specify the Python version compatible with your CDK app
+
+      - name: Install AWS CDK and Python Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt  # Install dependencies listed in your requirements.txt
+
+      - name: Bootstrap CDK
+        run: cdk bootstrap
+
+      - name: Synthesize CDK
+        run: cdk synth
