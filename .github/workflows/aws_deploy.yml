@@ -3,7 +3,7 @@ name: Python CDK Synthesis on Pull Request
 on:
   pull_request:
     branches:
-      - master  # Specify the branch to trigger the workflow
+      - main  # Trigger the workflow for pull requests to the main branch
 
 jobs:
   synthesize:
@@ -16,15 +16,18 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v3
         with:
-          python-version: '3.9'  # Specify the Python version compatible with your CDK app
+          python-version: '3.9'  # Specify the required Python version
 
-      - name: Install AWS CDK and Python Dependencies
+      - name: Install AWS CDK
+        run: npm install -g aws-cdk  # Install AWS CDK globally
+
+      - name: Install Python Dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt  # Install dependencies listed in your requirements.txt
+          pip install -r requirements.txt  # Install dependencies from requirements.txt
 
       - name: Bootstrap CDK
-        run: cdk bootstrap
+        run: cdk bootstrap  # Make sure CDK is bootstrapped in your AWS environment
 
       - name: Synthesize CDK
-        run: cdk synth
+        run: cdk synth  # Synthesize the CloudFormation templates
