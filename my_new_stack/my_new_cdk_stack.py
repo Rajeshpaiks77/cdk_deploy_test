@@ -9,7 +9,6 @@ class MyNewCdkStack(Stack):
 
     def __init__(self, scope: Construct, construct_id: str, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
-        
-       s3.Bucket(id="RjBucket",bucket_name="rj-bucket") # new bucket
+        s3.Bucket(self,id="RjBucket",bucket_name="rj-bucket") # new bucket
     
 
