@@ -39,4 +39,4 @@ jobs:
         run: echo $PATH  # Check the PATH environment variable to ensure it includes the npm global bin directory
 
       - name: Bootstrap CDK
-        run: cdk bootstrap  # Bootstrap the environment
+        run: cdk bootstrap arn:aws:iam::600627337253:user/devops # Bootstrap the environment
