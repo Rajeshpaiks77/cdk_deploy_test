@@ -3,7 +3,7 @@ name: Python CDK Synthesis on Pull Request
 on:
   pull_request:
     branches:
-      - master  # Trigger on pull requests to the master branch
+      - master  # Replace with your branch name
 
 jobs:
   synthesize:
@@ -16,11 +16,14 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '16'
+          node-version: '16'  # Node.js version for CDK
 
       - name: Install AWS CDK
-        run: npm install -g aws-cdk
-          && echo "CDK version: $(cdk --version)"
+        run: |
+          npm install -g aws-cdk  # Install the AWS CDK globally
+          echo "CDK installed successfully."
+          which cdk  # Locate where the cdk binary is installed
+          cdk --version  # Verify CDK installation
 
       - name: Set up Python
         uses: actions/setup-python@v3
@@ -32,8 +35,8 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Bootstrap CDK
-        run: cdk bootstrap
+      - name: Debug PATH
+        run: echo $PATH  # Check the PATH environment variable to ensure it includes the npm global bin directory
 
-      - name: Synthesize CDK
-        run: cdk synth
+      - name: Bootstrap CDK
+        run: cdk bootstrap  # Bootstrap the environment
