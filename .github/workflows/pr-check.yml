@@ -51,7 +51,7 @@ jobs:
           ls -la cdk.out
 
       - name: Upload CDK Output
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: cdk-out
           path: cdk.out
