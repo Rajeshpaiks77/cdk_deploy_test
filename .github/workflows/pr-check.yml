@@ -3,7 +3,7 @@ name: PR Deployment Check
 on:
   pull_request:
     branches:
-      - main
+      - master
 
 jobs:
   validate-cdk:
@@ -14,7 +14,12 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      - name: Setup Node.js (for CDK)
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Setup Node.js (for CDK CLI)
         uses: actions/setup-node@v3
         with:
           node-version: '18.x'
@@ -26,10 +31,13 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-south-1
 
-      - name: Install Dependencies
+      - name: Install AWS CDK CLI
+        run: npm install -g aws-cdk
+
+      - name: Install Python CDK and Dependencies
         run: |
-          npm install -g aws-cdk
-          npm install  # adjust if you're using a Python CDK
+          pip install aws-cdk-lib constructs
+          pip install -r requirements.txt
 
       - name: Bootstrap CDK Environment
         run: cdk bootstrap
@@ -39,7 +47,3 @@ jobs:
 
       - name: Diff Against Deployed Stack
         run: cdk diff
-
-      # Optional: Add deployment step if desired
-      # - name: Deploy CDK Stack
-      #   run: cdk deploy --require-approval never
