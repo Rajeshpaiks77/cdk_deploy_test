@@ -1,7 +1,7 @@
 name: CDK Deploy
 
 on:
-  pull_request:
+  push:
     branches:
       - master
 
