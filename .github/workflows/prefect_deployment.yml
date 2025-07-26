@@ -1,0 +1,37 @@
+name: prefect_flow_deploy
+
+on:
+  push:
+    branches:
+      - master  # Trigger deployment on push to main
+
+jobs:
+  deploy:
+    name: Deploy All Prefect Flows
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout your code
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Step 2: Setup Python
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      # Step 3: Install dependencies
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install prefect
+
+      # Step 4: Authenticate with Prefect Cloud
+      - name: Prefect Cloud Login
+        run: prefect cloud login --token ${{ secrets.PREFECT_API_TOKEN }}
+
+      # Step 5: Discover and deploy all flows defined in prefect.yaml
+      - name: Deploy All Prefect Flows
+        run: prefect deploy --all
