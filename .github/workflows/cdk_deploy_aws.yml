@@ -1,13 +1,13 @@
-name: CDK Deploy
+name: PR Deployment Check
 
 on:
-  push:
+  pull_request:
     branches:
       - master
 
 jobs:
-  deploy-cdk:
-    name: Deploy CDK Stack
+  validate-cdk:
+    name: Validate CDK App
     runs-on: ubuntu-latest
 
     steps:
@@ -19,10 +19,10 @@ jobs:
         with:
           python-version: '3.x'
 
-      - name: Setup Node.js
+      - name: Setup Node.js (for CDK CLI)
         uses: actions/setup-node@v3
         with:
-          node-version: '18.x'
+          node-version: '20.x'
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
@@ -42,5 +42,22 @@ jobs:
       - name: Bootstrap CDK Environment
         run: cdk bootstrap
 
-      - name: Deploy CDK Stack
-        run: cdk deploy --require-approval never
+      - name: Synthesize CDK App
+        run: cdk synth
+
+      - name: Show CDK Output Contents
+        run: |
+          echo "Listing CDK output folder:"
+          ls -la cdk.out
+
+      - name: Upload CDK Output
+        uses: actions/upload-artifact@v4
+        with:
+          name: cdk-out
+          path: cdk.out
+
+      - name: Diff Against Deployed Stack
+        run: cdk diff
+
+      - name: Deploy All CDK Stacks
+        run: cdk deploy --all --require-approval never
