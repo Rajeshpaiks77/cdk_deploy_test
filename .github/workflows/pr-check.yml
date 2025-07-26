@@ -1,0 +1,45 @@
+name: PR Deployment Check
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  validate-cdk:
+    name: Validate CDK App
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js (for CDK)
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.x'
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-south-1
+
+      - name: Install Dependencies
+        run: |
+          npm install -g aws-cdk
+          npm install  # adjust if you're using a Python CDK
+
+      - name: Bootstrap CDK Environment
+        run: cdk bootstrap
+
+      - name: Synthesize CDK App
+        run: cdk synth
+
+      - name: Diff Against Deployed Stack
+        run: cdk diff
+
+      # Optional: Add deployment step if desired
+      # - name: Deploy CDK Stack
+      #   run: cdk deploy --require-approval never
