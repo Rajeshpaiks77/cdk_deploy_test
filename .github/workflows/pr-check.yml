@@ -1,7 +1,7 @@
 name: PR Deployment Check
 
 on:
-  pull_request_target:
+  pull_request:
     branches:
       - master
 
@@ -58,17 +58,3 @@ jobs:
 
       - name: Diff Against Deployed Stack
         run: cdk diff
-
-      - name: Prepare CDK Synth Summary
-        run: |
-          echo "## Synthesized CDK Stack Output" > cdk-summary.txt
-          echo "\`\`\`json" >> cdk-summary.txt
-          cat cdk.out/*.template.json >> cdk-summary.txt
-          echo "\`\`\`" >> cdk-summary.txt
-
-      - name: Post CDK Summary to PR
-        uses: peter-evans/create-or-update-comment@v4
-        with:
-          token: ${{ secrets.GH_PAT }}
-          issue-number: ${{ github.event.pull_request.number }}
-          body-path: cdk-summary.txt
