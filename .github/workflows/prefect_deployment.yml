@@ -30,7 +30,7 @@ jobs:
 
       # Step 4: Authenticate with Prefect Cloud
       - name: Prefect Cloud Login
-        run: prefect cloud login --token ${{ secrets.PREFECT_API_TOKEN }}
+        run: prefect cloud login --key ${{ secrets.PREFECT_API_TOKEN }}
 
       # Step 5: Discover and deploy all flows defined in prefect.yaml
       - name: Deploy All Prefect Flows
