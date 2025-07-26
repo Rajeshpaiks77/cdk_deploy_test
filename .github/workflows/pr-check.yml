@@ -51,10 +51,24 @@ jobs:
           ls -la cdk.out
 
       - name: Upload CDK Output
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v3
         with:
           name: cdk-out
           path: cdk.out
 
       - name: Diff Against Deployed Stack
         run: cdk diff
+
+      - name: Prepare CDK Synth Summary
+        run: |
+          echo "## Synthesized CDK Stack Output" > cdk-summary.txt
+          echo "\`\`\`json" >> cdk-summary.txt
+          cat cdk.out/*.template.json >> cdk-summary.txt
+          echo "\`\`\`" >> cdk-summary.txt
+
+      - name: Post CDK Summary to PR
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          issue-number: ${{ github.event.pull_request.number }}
+          body-path: cdk-summary.txt
