@@ -1,7 +1,7 @@
 name: PR Deployment Check
 
 on:
-  pull_request:
+  push:
     branches:
       - master
 
