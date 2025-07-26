@@ -45,5 +45,16 @@ jobs:
       - name: Synthesize CDK App
         run: cdk synth
 
+      - name: Show CDK Output Contents
+        run: |
+          echo "Listing CDK output folder:"
+          ls -la cdk.out
+
+      - name: Upload CDK Output
+        uses: actions/upload-artifact@v3
+        with:
+          name: cdk-out
+          path: cdk.out
+
       - name: Diff Against Deployed Stack
         run: cdk diff
