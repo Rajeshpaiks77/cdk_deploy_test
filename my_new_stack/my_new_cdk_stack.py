@@ -1,7 +1,8 @@
 from aws_cdk import (
     # Duration,
     Stack,
-    # aws_sqs as sqs,
+    aws_s3 as Bucket,
+    RemovalPolicy
 )
 from constructs import Construct
 
