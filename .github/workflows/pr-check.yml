@@ -3,7 +3,7 @@ name: PR Deployment Check
 on:
   pull_request:
     branches:
-      - main
+      - master
 
 jobs:
   validate-cdk:
